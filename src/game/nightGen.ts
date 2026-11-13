@@ -37,6 +37,28 @@ function shuffle<T>(array: T[], rng: () => number): T[] {
 }
 
 // ------------------------------------------------------------------ //
+// rampSort
+//
+// Sort `letters` so that difficulty increases across the night while
+// allowing variety within each tier.
+//
+// Algorithm:
+//   1. Group letters by difficulty tier (1, 2, 3).
+//   2. Shuffle each tier independently with the PRNG.
+//   3. Concatenate: all tier-1 → all tier-2 → all tier-3.
+//
+// Guarantee: avg(last 3) >= avg(first 3) for any seed because the
+// later positions always come from equal-or-higher difficulty tiers.
+// ------------------------------------------------------------------ //
+
+function rampSort(letters: Letter[], rng: () => number): Letter[] {
+  const tier1 = shuffle(letters.filter((l) => l.difficulty === 1), rng)
+  const tier2 = shuffle(letters.filter((l) => l.difficulty === 2), rng)
+  const tier3 = shuffle(letters.filter((l) => l.difficulty === 3), rng)
+  return [...tier1, ...tier2, ...tier3]
+}
+
+// ------------------------------------------------------------------ //
 // generateNight
 //
 // Strategy:
@@ -44,13 +66,14 @@ function shuffle<T>(array: T[], rng: () => number): T[] {
 //   2. Shuffle each bucket independently.
 //   3. Determine phishing count in [4, 6] using the PRNG.
 //   4. Take that many phishing letters; fill the remaining slots from legit.
-//   5. Merge and re-shuffle the combined 10 letters.
+//   5. Apply rampSort so difficulty increases across the 10 letters.
 //
 // Guarantees for a 10-letter night:
 //   • Exactly 10 letters.
 //   • 4–6 phishing, 4–6 legit.
 //   • No duplicate ids.
 //   • Same seed → same output (deterministic).
+//   • avg(difficulty of last 3) >= avg(difficulty of first 3).
 // ------------------------------------------------------------------ //
 
 export function generateNight(
@@ -89,5 +112,6 @@ export function generateNight(
     ...legitPool.slice(0, legitCount),
   ]
 
-  return shuffle(selected, rng)
+  // Sort by difficulty tier with within-tier shuffle for variety.
+  return rampSort(selected, rng)
 }
