@@ -83,6 +83,13 @@ describe('generateNight', () => {
     expect(ids1).not.toEqual(ids2)
     expect(ids2).not.toEqual(ids3)
   })
+
+  it('average difficulty of last 3 letters >= average of first 3', () => {
+    const night = generateNight(letters, 42)
+    const avgFirst3 = (night[0].difficulty + night[1].difficulty + night[2].difficulty) / 3
+    const avgLast3 = (night[7].difficulty + night[8].difficulty + night[9].difficulty) / 3
+    expect(avgLast3).toBeGreaterThanOrEqual(avgFirst3)
+  })
 })
 
 // ------------------------------------------------------------------ //
@@ -128,6 +135,18 @@ describe('generateNight — properties', () => {
         const night = generateNight(letters, seed)
         const ids = night.map((l) => l.id)
         return new Set(ids).size === ids.length
+      }),
+      { numRuns: 200 },
+    )
+  })
+
+  it('average difficulty of last 3 is >= average difficulty of first 3 for any seed', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 2 ** 32 - 1 }), (seed) => {
+        const night = generateNight(letters, seed)
+        const avgFirst3 = (night[0].difficulty + night[1].difficulty + night[2].difficulty) / 3
+        const avgLast3 = (night[7].difficulty + night[8].difficulty + night[9].difficulty) / 3
+        return avgLast3 >= avgFirst3
       }),
       { numRuns: 200 },
     )
