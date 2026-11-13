@@ -1,0 +1,106 @@
+/* =====================================================================
+   Haunted Inbox — CSS Custom Properties
+   Single source of truth for all colours, typography, spacing, motion.
+   ===================================================================== */
+
+:root {
+  /* --- Colours --- */
+  --color-bg:           #1a1008;   /* dark wood / night sky */
+  --color-surface:      #2e1f0e;   /* desk surface */
+  --color-surface-alt:  #3a2710;   /* slightly lighter surface */
+  --color-parchment:    #e8d9b0;   /* letter background */
+  --color-parchment-dark: #d4c08a; /* letter border / aged edge */
+  --color-ink:          #2b1d0e;   /* letter body text */
+  --color-candle:       #f5a623;   /* candle flame yellow */
+  --color-candle-glow:  #f5a62330; /* translucent flame glow */
+  --color-accent:       #8b2500;   /* wax seal red / burn accent */
+  --color-accent-light: #c0392b;   /* brighter red for hover */
+  --color-correct:      #4a7c59;   /* correct answer green */
+  --color-correct-bg:   #4a7c5920; /* correct answer background */
+  --color-wrong:        #8b2500;   /* wrong answer red */
+  --color-wrong-bg:     #8b250020; /* wrong answer background */
+  --color-focus:        #f5e642;   /* visible focus ring (high contrast) */
+  --color-text-on-dark: #e8d9b0;   /* readable text on dark backgrounds */
+  --color-muted:        #9e8c72;   /* subdued text (labels, counters) */
+
+  /* --- Typography --- */
+  --font-body:          'IM Fell English', Georgia, 'Times New Roman', serif;
+  --font-ui:            system-ui, -apple-system, sans-serif;
+  --font-size-xs:       0.75rem;
+  --font-size-sm:       0.875rem;
+  --font-size-base:     1rem;
+  --font-size-lg:       1.25rem;
+  --font-size-xl:       1.5rem;
+  --font-size-2xl:      2rem;
+
+  /* --- Spacing --- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* --- Borders & Radius --- */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  16px;
+  --border-width: 2px;
+
+  /* --- Motion (overridden to 0s when prefers-reduced-motion is active) --- */
+  --transition-letter:  0.4s ease-out;
+  --transition-fast:    0.15s ease;
+  --transition-candle:  0.3s ease;
+  --animation-flicker:  candleFlicker 2s ease-in-out infinite alternate;
+  --animation-slide-in: letterSlideIn var(--transition-letter) forwards;
+
+  /* --- Z-index layers --- */
+  --z-tooltip:  100;
+  --z-overlay:  200;
+  --z-feedback: 300;
+}
+
+/* Respect the user's motion preference */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-letter:  0s;
+    --transition-fast:    0s;
+    --transition-candle:  0s;
+    --animation-flicker:  none;
+    --animation-slide-in: none;
+  }
+}
+
+/* =====================================================================
+   Global resets / base styles
+   ===================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-on-dark);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+/* Visible focus ring for all interactive elements */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
