@@ -24,6 +24,9 @@ export default function LetterCard({ letter, isInspecting }: LetterCardProps) {
     // Force reflow so removing and re-adding the class restarts the animation
     void el.offsetWidth
     el.classList.add('letter-enter')
+    // Move keyboard / screen-reader focus to the new letter so it is read out
+    // and the next Tab lands on the letter's own controls.
+    el.focus({ preventScroll: true })
   }, [letter.id])
 
   return (
@@ -31,6 +34,7 @@ export default function LetterCard({ letter, isInspecting }: LetterCardProps) {
       ref={cardRef}
       className={`letter-card${isInspecting ? ' inspecting' : ''}`}
       aria-label={`Letter from ${letter.sender}`}
+      tabIndex={-1}
     >
       {/* Curse-mark overlay — visual only, shown when inspecting */}
       <div className="letter-card__curse-overlay" aria-hidden="true" />

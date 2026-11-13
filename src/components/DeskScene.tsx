@@ -30,7 +30,7 @@ export default function DeskScene({ nightState, dispatch }: DeskSceneProps) {
   }
 
   return (
-    <div className="desk-scene">
+    <div className="desk-scene" inert={nightState.phase !== 'playing'}>
       <HUD
         lives={nightState.lives}
         score={nightState.score}

@@ -23,12 +23,13 @@ export default function FeedbackPanel({ letter, playerVerdict, onNext }: Feedbac
   return (
     <section
       className={`feedback-panel feedback-panel--${correct ? 'correct' : 'wrong'} feedback-enter`}
-      aria-label="Feedback"
-      aria-live="assertive"
-      aria-atomic="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="feedback-verdict"
+      aria-describedby="feedback-lesson"
     >
       {/* Verdict indicator — text label is mandatory (not colour-only) */}
-      <div className="feedback-panel__verdict">
+      <div className="feedback-panel__verdict" id="feedback-verdict">
         <span
           className={`feedback-panel__verdict-badge feedback-panel__verdict-badge--${correct ? 'correct' : 'wrong'}`}
           aria-label={correct ? 'Correct' : 'Wrong'}
@@ -68,7 +69,7 @@ export default function FeedbackPanel({ letter, playerVerdict, onNext }: Feedbac
       )}
 
       {/* Specific lesson for this letter */}
-      <div className="feedback-panel__explanation">
+      <div className="feedback-panel__explanation" id="feedback-lesson">
         <h2 className="feedback-panel__explanation-title">Lesson</h2>
         <p>{letter.explanation}</p>
       </div>
