@@ -22,6 +22,7 @@ function makeLetter(overrides: Partial<Letter> = {}): Letter {
     verdict: 'legit',
     redFlags: [],
     explanation: 'Test explanation.',
+    difficulty: 1,
     ...overrides,
   }
 }

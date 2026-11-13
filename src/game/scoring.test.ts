@@ -21,6 +21,7 @@ const legitLetter: Letter = {
   verdict: 'legit',
   redFlags: [],
   explanation: 'This is a test.',
+  difficulty: 1,
 }
 
 const phishingLetter: Letter = {
@@ -32,6 +33,7 @@ const phishingLetter: Letter = {
   verdict: 'phishing',
   redFlags: ['urgency'],
   explanation: 'This is a phishing test.',
+  difficulty: 1,
 }
 
 const baseState = { lives: 3, score: 0, streak: 0, maxStreak: 0 }

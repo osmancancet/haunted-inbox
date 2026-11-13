@@ -23,6 +23,7 @@ function makeLetter(overrides: Partial<Letter> = {}): Letter {
     verdict: 'phishing',
     redFlags: ['urgency'],
     explanation: 'Test explanation.',
+    difficulty: 1,
     ...overrides,
   }
 }
@@ -165,6 +166,7 @@ describe('calcMissedFlags — properties', () => {
               verdict: raw.verdict,
               redFlags: raw.verdict === 'legit' ? [] : raw.redFlags,
               explanation: 'E',
+              difficulty: 1 as const,
             },
             playerVerdict: raw.playerVerdict,
           }))
@@ -212,6 +214,7 @@ describe('calcMissedFlags — properties', () => {
               verdict: raw.verdict,
               redFlags: raw.verdict === 'legit' ? [] : raw.redFlags,
               explanation: 'E',
+              difficulty: 1 as const,
             },
             playerVerdict: raw.playerVerdict,
           }))
