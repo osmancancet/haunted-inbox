@@ -209,3 +209,25 @@ describe('gameReducer — PLAY_AGAIN', () => {
     expect(next.letters.map((nl) => nl.letter.id)).toEqual(['new1', 'new2'])
   })
 })
+
+// ------------------------------------------------------------------ //
+// A verdict counts once
+// ------------------------------------------------------------------ //
+
+describe('gameReducer — SUBMIT_VERDICT outside the playing phase', () => {
+  it('ignores a second verdict while feedback is showing', () => {
+    const afterFirst = gameReducer(twoLetterNight(), {
+      type: 'SUBMIT_VERDICT',
+      verdict: 'phishing', // wrong: letter l1 is legit
+    })
+    expect(afterFirst.phase).toBe('feedback')
+    expect(afterFirst.lives).toBe(2)
+
+    const afterSecond = gameReducer(afterFirst, {
+      type: 'SUBMIT_VERDICT',
+      verdict: 'phishing',
+    })
+    expect(afterSecond).toBe(afterFirst)
+    expect(afterSecond.lives).toBe(2)
+  })
+})

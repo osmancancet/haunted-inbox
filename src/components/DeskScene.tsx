@@ -65,12 +65,13 @@ export default function DeskScene({ nightState, dispatch }: DeskSceneProps) {
         </div>
 
         {/* Letter */}
-        <LetterCard letter={letter} isInspecting={isInspecting} />
+        <LetterCard key={letter.id} letter={letter} isInspecting={isInspecting} />
 
         {/* Actions */}
         <ActionBar
           onDeliver={() => handleVerdict('legit')}
           onBurn={() => handleVerdict('phishing')}
+          disabled={nightState.phase !== 'playing'}
         />
       </main>
     </div>

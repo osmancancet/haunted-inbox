@@ -41,6 +41,10 @@ export function gameReducer(state: NightState, action: GameAction): NightState {
     }
 
     case 'SUBMIT_VERDICT': {
+      // A verdict counts once: ignore submissions outside the playing phase
+      // (e.g. a second click while the feedback panel is open).
+      if (state.phase !== 'playing') return state
+
       const current = state.letters[state.currentIndex]
       if (!current) return state
 
