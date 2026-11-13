@@ -139,7 +139,7 @@ describe('calcMissedFlags — properties', () => {
       fc.property(
         fc.array(
           fc.record({
-            id: fc.hexaString({ minLength: 4, maxLength: 8 }),
+            id: fc.string({ minLength: 4, maxLength: 8 }),
             verdict: fc.constantFrom('legit' as const, 'phishing' as const),
             redFlags: fc.array(
               fc.constantFrom(
@@ -187,7 +187,7 @@ describe('calcMissedFlags — properties', () => {
       fc.property(
         fc.array(
           fc.record({
-            id: fc.hexaString({ minLength: 4, maxLength: 8 }),
+            id: fc.string({ minLength: 4, maxLength: 8 }),
             verdict: fc.constantFrom('legit' as const, 'phishing' as const),
             redFlags: fc.array(
               fc.constantFrom(
