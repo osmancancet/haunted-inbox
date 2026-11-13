@@ -31,3 +31,29 @@ is a core requirement, not decoration).
 
 ## Non-goals
 No accounts, no backend, no tracking, no real email integration.
+
+## Content design rules (added after first content review)
+The pool must not be solvable by a shortcut. In particular:
+- "Has a link" must NOT predict phishing. At least 40% of legit letters contain
+  a link whose real destination matches the sender's genuine domain, and at
+  least 25% of phishing letters contain no link at all (reply-based scams:
+  gift-card request from "the boss", invoice/bank-detail change, callback
+  number, "are you at your desk?" pretexts).
+- Tone must NOT predict the verdict. Include legit letters with a real deadline
+  or a request for action (renewal reminder, password changed notice, meeting
+  RSVP, invoice from a known supplier), and calm, polite phishing letters with
+  only one or two subtle red flags (a look-alike domain, a reply-to mismatch).
+- Difficulty tiers: each letter has `difficulty: 1 | 2 | 3`. Tier 1 is obvious,
+  tier 3 hinges on a single detail the player must inspect. A night ramps up:
+  mostly tier 1 first, tier 3 last.
+- The revealed real URL must look realistic and neutral (`/login`, `/verify`,
+  `/account`). Never use giveaway paths such as `/phish`, `/harvest`,
+  `/steal-creds`. The lesson is the DOMAIN, not the path.
+- Domains: invented names on ordinary suffixes (.com, .net, .org, .co). Do not
+  use real government or national suffixes (.gov, .gov.uk, .co.uk, .edu).
+- Explanations must be accurate and practical: name the specific signal in THIS
+  letter and the safe action (check the domain, open the site yourself, call a
+  known number). Avoid absolute claims like "banks never..." or "IT never...".
+- Use a neutral fictional currency ("silver marks") instead of real currencies,
+  and no country-specific details.
+- Each red-flag type must appear in at least 3 phishing letters.

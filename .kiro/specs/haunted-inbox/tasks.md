@@ -55,18 +55,31 @@ Legend:
   - Import the (not-yet-existing) default export from `src/content/letters.ts`.
   - Assert every letter has non-empty `id`, `sender`, `senderEmail`, `subject`,
     `body`, `verdict`, `explanation`.
+  - Assert every letter has `difficulty` in {1, 2, 3}.
   - Assert every phishing letter has `redFlags.length >= 1`.
-  - Assert pool size ≥ 15.
+  - Assert pool size ≥ 30 (≥ 14 phishing, ≥ 12 legit).
+  - Assert ≥ 6 letters per difficulty tier.
+  - Assert ≥ 40% of legit letters have a link whose `realUrl` host matches
+    the sender's email domain.
+  - Assert ≥ 25% of phishing letters have no `link` field.
+  - Assert every `RedFlagId` used in the pool appears in ≥ 3 phishing letters.
+  - Assert no `realUrl` contains `phish`, `harvest`, `steal`, `capture`, or
+    `creds`.
+  - Assert no `senderEmail` or `realUrl` ends with `.gov`, `.gov.uk`, `.co.uk`,
+    or `.edu`.
 - Run `npm test` — expect failures.
-- **Reqs:** AC-10-01, AC-10-02, AC-10-03, AC-10-05
+- **Reqs:** AC-10-01 through AC-10-11
 
 ### Task 06 — Author letter content
 
-- Create `src/content/letters.ts` with ≥ 15 original letters (≥ 8 phishing, ≥ 5
-  legit), all using invented names/companies (Gravewell Bank, Moonpost Courier,
-  etc.). Include a header comment warning authors never to use real brands.
+- Create `src/content/letters.ts` with ≥ 30 original letters (≥ 14 phishing,
+  ≥ 12 legit), all using invented names/companies (Gravewell Bank, Moonpost
+  Courier, etc.). Include a header comment warning authors never to use real
+  brands. Add `difficulty: 1 | 2 | 3` to every letter. Use "silver marks"
+  for all amounts. Ensure realistic `realUrl` paths (`/login`, `/verify`,
+  `/account`). Cover all content design rules.
 - Run `npm test` — schema tests should now pass.
-- **Reqs:** AC-10-01 through AC-10-05, AC-02-01
+- **Reqs:** AC-10-01 through AC-10-12, AC-02-01
 
 ---
 
@@ -81,12 +94,14 @@ Legend:
   - Legit count equals `10 - phishingCount` (i.e. between 4 and 6).
   - Same seed → same sequence (call twice, compare).
   - No duplicate `id` values in result.
+  - Average difficulty of the last 3 letters ≥ average of the first 3.
 - Write fast-check property tests:
   - For arbitrary seed (`fc.integer`): length invariant holds (always 10).
   - For arbitrary seed: phishing count is always in [4, 6].
   - For arbitrary seed: determinism holds (two calls with same seed are equal).
+  - For arbitrary seed: avg difficulty of last 3 ≥ avg difficulty of first 3.
 - Run `npm test` — expect failures.
-- **Reqs:** AC-01-03, AC-01-04
+- **Reqs:** AC-01-03, AC-01-04, AC-01-05
 
 ### Task 08 — Implement PRNG and night generation
 
@@ -94,12 +109,13 @@ Legend:
 - Implement `mulberry32` and `generateNight`:
   - Shuffle each verdict bucket (phishing pool, legit pool) separately with
     Fisher-Yates using the seeded PRNG.
-  - Pick a phishing count in [4, 6] by using `4 + (prng() % 3)` logic (integer
-    from seeded PRNG, mapped to 0–2, added to 4).
+  - Pick a phishing count in [4, 6].
   - Take that many phishing letters, fill the remaining slots with legit letters.
-  - Merge and re-shuffle the combined 10 letters with the same PRNG.
+  - Sort the combined 10 letters by difficulty ascending, then apply a
+    within-tier shuffle so equal-difficulty letters vary in order while the
+    overall ramp is preserved.
 - Run `npm test` — Task 07 tests should pass.
-- **Reqs:** AC-01-03, AC-01-04
+- **Reqs:** AC-01-03, AC-01-04, AC-01-05
 
 ### Task 09 — Scoring tests
 

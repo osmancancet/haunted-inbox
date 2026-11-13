@@ -55,7 +55,8 @@ export interface Letter {
   link?: LetterLink;
   verdict: Verdict;
   redFlags: RedFlagId[];  // Empty array for legit letters
-  explanation: string;    // One-sentence educational lesson
+  explanation: string;    // Specific signal + safe action — no absolute claims
+  difficulty: 1 | 2 | 3; // 1 = obvious, 3 = hinges on a single inspected detail
 }
 ```
 
@@ -112,7 +113,10 @@ export function mulberry32(seed: number): () => number { … }
  * Guarantees between 4 and 6 phishing letters (inclusive) in a 10-letter
  * night. Strategy: shuffle each verdict bucket separately, take a random
  * count in [4,6] from phishing, fill the remainder from legit, then
- * merge and re-shuffle.
+ * merge and re-shuffle. After selection the 10 letters are sorted by
+ * difficulty (ascending) with a secondary shuffle to avoid identical
+ * orderings — ensuring average difficulty of the last 3 ≥ average of
+ * the first 3.
  */
 export function generateNight(
   pool: Letter[],
@@ -126,6 +130,7 @@ Property-based tests (fast-check):
 - The phishing count in the result is always between 4 and 6 inclusive.
 - Same seed always produces same sequence (determinism).
 - No duplicate letter ids in a single night.
+- Average difficulty of last 3 letters ≥ average difficulty of first 3.
 
 ### 3.2 Scoring
 
@@ -338,6 +343,7 @@ Also in the same test files, using `fc.assert(fc.property(…))`.
 |---|---|
 | `generateNight` length invariant | `fc.integer({ min: 0, max: 2^32 })` as seed |
 | Phishing count in [4, 6] | Same seed generator |
+| Difficulty ramp: avg(last 3) ≥ avg(first 3) | Same seed generator |
 | Determinism | Same seed → same output |
 | `applyVerdict` lives ≥ 0 | Arbitrary `NightState` subsets |
 | `applyVerdict` score monotone on correct | Correct verdict inputs |
@@ -351,7 +357,13 @@ Validates every `Letter` in the pool at import time:
 - Required fields non-empty.
 - `verdict === "phishing"` ⇒ `redFlags.length ≥ 1`.
 - `explanation` non-empty.
-- Pool size ≥ 15.
+- `difficulty` is 1, 2, or 3; ≥ 6 letters per tier.
+- Pool size ≥ 30 (≥ 14 phishing, ≥ 12 legit).
+- ≥ 40% of legit letters have a link whose `realUrl` host matches sender domain.
+- ≥ 25% of phishing letters have no link.
+- Every `RedFlagId` used in the pool appears in ≥ 3 phishing letters.
+- No `realUrl` contains `phish`, `harvest`, `steal`, `capture`, or `creds`.
+- No domain suffix `.gov`, `.gov.uk`, `.co.uk`, or `.edu` in emails or URLs.
 
 ### 8.4 Component Tests
 

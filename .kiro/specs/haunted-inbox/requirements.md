@@ -40,6 +40,9 @@ playing.
 - AC-01-04: The system shall ensure each night contains between 4 and 6
   phishing letters (inclusive), with the remainder being legitimate letters
   (i.e. 4–6 phishing and 4–6 legit out of 10).
+- AC-01-05: The system shall order the 10 letters so that difficulty ramps up
+  across the night: the average `difficulty` of the last 3 letters shall be
+  greater than or equal to the average `difficulty` of the first 3 letters.
 
 ---
 
@@ -220,8 +223,9 @@ performance.
 
 ### US-10 — Content Rules
 
-As a content author, I want all in-game letters to follow strict fiction rules
-so that the game is safe and educationally accurate.
+As a content author, I want all in-game letters to follow strict fiction and
+design rules so that the game is safe, educationally accurate, and not
+solvable by shortcuts.
 
 **Acceptance criteria**
 
@@ -235,9 +239,29 @@ so that the game is safe and educationally accurate.
 - AC-10-04: The system shall not contain any real brand names, real domains, or
   references to real people in letter content; this is enforced by an author
   convention documented in a comment inside `letters.ts`.
-- AC-10-05: The letter pool shall contain a minimum of 15 letters (at least 8
-  phishing, at least 5 legitimate) to allow varied nights without immediate
+- AC-10-05: The letter pool shall contain a minimum of 30 letters (at least 14
+  phishing, at least 12 legitimate) to allow varied nights without immediate
   repetition.
+- AC-10-06: The system shall validate at test time that every letter has a
+  `difficulty` field with value 1, 2, or 3, and that the pool contains at least
+  6 letters per difficulty tier.
+- AC-10-07: The system shall validate at test time that at least 40% of legit
+  letters have a `link` whose `realUrl` host matches the sender's email domain,
+  so that "has a link" does not predict phishing.
+- AC-10-08: The system shall validate at test time that at least 25% of phishing
+  letters have no `link` field (reply-based scams), so that "no link" does not
+  predict legitimacy.
+- AC-10-09: The system shall validate at test time that every `redFlag` type
+  used in the pool appears in at least 3 phishing letters.
+- AC-10-10: The system shall validate at test time that no `realUrl` value
+  contains the substrings `phish`, `harvest`, `steal`, `capture`, or `creds`
+  (paths must look realistic, e.g. `/login`, `/verify`, `/account`).
+- AC-10-11: The system shall validate at test time that no `senderEmail` or
+  `realUrl` uses a domain suffix of `.gov`, `.gov.uk`, `.co.uk`, or `.edu`
+  (use ordinary suffixes only: `.com`, `.net`, `.org`, `.co`).
+- AC-10-12: Letter body text shall use the neutral fictional currency
+  "silver marks" rather than any real-world currency symbol or name; this is
+  enforced by author convention documented in `letters.ts`.
 
 ---
 
