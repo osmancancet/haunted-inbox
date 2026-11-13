@@ -1,6 +1,6 @@
 // =====================================================================
 // Haunted Inbox — Red-Flag Definitions
-// Seven recognisable social-engineering / phishing signals.
+// Eight recognisable social-engineering / phishing signals.
 // =====================================================================
 
 export type RedFlagId =
@@ -11,6 +11,7 @@ export type RedFlagId =
   | 'too_good_to_be_true'
   | 'unexpected_attachment'
   | 'authority_pressure'
+  | 'unusual_request'
 
 export interface RedFlagDefinition {
   id: RedFlagId
@@ -31,7 +32,7 @@ export const RED_FLAGS: RedFlagDefinition[] = [
     id: 'spoofed_sender',
     name: 'Spoofed Sender',
     description:
-      'The display name looks trustworthy, but the actual email address uses a different or misspelt domain.',
+      'The sender is not who it claims to be: the address uses a different or misspelt domain, or a genuine-looking From address has been forged or taken over.',
   },
   {
     id: 'mismatched_link',
@@ -43,7 +44,7 @@ export const RED_FLAGS: RedFlagDefinition[] = [
     id: 'credential_request',
     name: 'Credential Request',
     description:
-      'Legitimate organisations never ask for your password, PIN, or secret answers via email.',
+      'The message asks you to hand over passwords, card details or personal data through an emailed link or by reply.',
   },
   {
     id: 'too_good_to_be_true',
@@ -62,6 +63,12 @@ export const RED_FLAGS: RedFlagDefinition[] = [
     name: 'Authority Pressure',
     description:
       'Impersonating a bank, government agency, or senior official to make you comply without questioning.',
+  },
+  {
+    id: 'unusual_request',
+    name: 'Unusual Money or Secrecy Request',
+    description:
+      'Out-of-pattern asks such as buying gift vouchers, paying into a new bank account, calling a number given only in the message, or keeping the request confidential.',
   },
 ]
 

@@ -44,7 +44,7 @@ Legend:
 - Create `src/game/types.ts` with `Verdict`, `NightLetter`, `NightState`,
   `GameAction` as defined in the design doc.
 - Create `src/content/redFlags.ts` with `RedFlagId`, `RedFlagDefinition`, and
-  the full list of 7 red-flag definitions.
+  the full list of 8 red-flag definitions.
 - No tests needed (pure type definitions).
 - **Reqs:** AC-06-01, AC-10-01
 

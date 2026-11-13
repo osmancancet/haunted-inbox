@@ -47,7 +47,7 @@ export interface Letter {
 }
 
 // =====================================================================
-// PHISHING LETTERS  (18 total)
+// PHISHING LETTERS  (20 total)
 // No-link letters (reply-based): flagged with [NO LINK] in comment
 // =====================================================================
 
@@ -263,9 +263,46 @@ I am attending an emergency meeting and cannot make calls. I need you to purchas
 Please treat this as confidential.`,
     // [NO LINK]
     verdict: 'phishing',
-    redFlags: ['urgency', 'authority_pressure', 'too_good_to_be_true'],
+    redFlags: ['urgency', 'authority_pressure', 'unusual_request'],
     explanation:
-      'This is a classic "boss gift card" scam: someone impersonates an authority figure and asks for voucher codes by email. If you receive an unusual financial request, verify by calling the person directly on a known number.',
+      'The address looks like Lord Mirewarden\'s, but a From address can be forged or an account taken over, so a matching sender proves nothing. Buying vouchers and sending the codes in secret is the signal: confirm by calling him on a number you already know.',
+    difficulty: 2,
+  },
+
+  {
+    id: 'hollowgate-job-01',
+    sender: 'Hollowgate Recruitment',
+    senderEmail: 'careers@hollowgate-talent.org',
+    subject: 'Job offer: night archivist, 900 silver marks a week',
+    body: `Hello,
+
+We found your details online and are pleased to offer you the post of night archivist: two hours a week from home, 900 silver marks a week, no interview needed.
+
+To secure the position, reply today with your full name, date of birth and bank account number so we can set up your first payment.`,
+    // [NO LINK]
+    verdict: 'phishing',
+    redFlags: ['too_good_to_be_true', 'credential_request', 'urgency'],
+    explanation:
+      'High pay for almost no work, offered without an interview to someone who never applied, is the signal. A real employer does not collect bank details by reply before you have even spoken to them.',
+    difficulty: 2,
+  },
+
+  {
+    id: 'tombstone-reward-01',
+    sender: 'Tombstone Auctions Rewards',
+    senderEmail: 'rewards@tombstoneauctions-gifts.com',
+    subject: 'You have been selected for a 500 silver mark loyalty reward',
+    body: `Dear Member,
+
+As a thank-you for your custom, your account has been selected for a 500 silver mark loyalty reward. Sign in below to add it to your balance. The offer is reserved for you for 48 hours.`,
+    link: {
+      displayText: 'tombstoneauctions.com/rewards',
+      realUrl: 'tombstoneauctions-gifts.com/login',
+    },
+    verdict: 'phishing',
+    redFlags: ['too_good_to_be_true', 'spoofed_sender', 'mismatched_link', 'urgency'],
+    explanation:
+      'A large reward nobody asked for is the lure. The sender and the real link both use "tombstoneauctions-gifts.com", not the auction house\'s own "tombstoneauctions.com". Check rewards from inside your account instead.',
     difficulty: 2,
   },
 
@@ -284,7 +321,7 @@ Your account contact details were updated earlier today. If you did not make thi
     verdict: 'phishing',
     redFlags: ['urgency', 'spoofed_sender', 'mismatched_link'],
     explanation:
-      'The email sender says "nocturne-bank.com" but the real link destination is "nocturne-bank-secure.com" — a different domain. When you get an unexpected security alert, go directly to your bank\'s website rather than following the link.',
+      'The From address matches the bank, which can be forged. The link is the signal: it shows "nocturne-bank.com" but leads to "nocturne-bank-secure.com", a different domain. For a security alert, type the bank\'s address yourself.',
     difficulty: 2,
   },
 
@@ -307,7 +344,7 @@ Please log in to review your transactions.`,
     verdict: 'phishing',
     redFlags: ['spoofed_sender', 'mismatched_link'],
     explanation:
-      'The email looks routine, but hovering over the link reveals the destination is "nocturne-b4nk.com" — the "a" has been replaced with a "4". Always inspect the real URL before clicking any link in a financial email.',
+      'The From address is the bank\'s real one, but From addresses can be forged, so it proves nothing. Revealing the link shows "nocturne-b4nk.com" with a "4" in place of the "a". Check the real destination before following any link.',
     difficulty: 3,
   },
 
@@ -344,9 +381,9 @@ Please note that our bank account details have changed with effect from this mon
 Please update your records accordingly.`,
     // [NO LINK]
     verdict: 'phishing',
-    redFlags: ['credential_request', 'unexpected_attachment', 'authority_pressure'],
+    redFlags: ['unusual_request', 'unexpected_attachment', 'spoofed_sender'],
     explanation:
-      'Requests to change payment account details via email are a common business fraud. Before updating bank details, call the supplier on a number from your records — not from this email.',
+      'It comes from the supplier\'s usual address, yet that can be forged or the mailbox compromised. A request to pay into a new bank account is the signal: call the supplier on a number from your own records before changing anything.',
     difficulty: 3,
   },
 
@@ -365,27 +402,27 @@ If you did not authorise this upgrade, sign in to review your plan.`,
       realUrl: 'spectrecloud.net/login',                // .net vs .com
     },
     verdict: 'phishing',
-    redFlags: ['too_good_to_be_true', 'spoofed_sender', 'mismatched_link'],
+    redFlags: ['spoofed_sender', 'mismatched_link'],
     explanation:
-      'The email comes from "spectrecloud.com" but the link leads to "spectrecloud.net" — a different top-level domain. When an unexpected charge notice arrives, navigate to the official site yourself rather than clicking the link.',
+      'The From address shows the genuine "spectrecloud.com", but From addresses can be forged. The real link goes to "spectrecloud.net", a different domain. For a surprise charge, open the site yourself instead of using the link.',
     difficulty: 3,
   },
 
   {
     id: 'mirewarden-callback-01',
     sender: 'Mirewarden Estate Management',
-    senderEmail: 'admin@mirewarden-estate.net',
+    senderEmail: 'admin@mirewarden-estates.net',
     subject: 'Routine verification — please call to confirm',
     body: `Dear Resident,
 
 We are updating resident contact records as part of our annual review. Please call our resident services line at the number below to confirm your details.
 
-Resident Services: 0800-GHOST-01`,
+Resident Services: 555-0142`,
     // [NO LINK] — callback scam
     verdict: 'phishing',
-    redFlags: ['credential_request', 'authority_pressure'],
+    redFlags: ['spoofed_sender', 'unusual_request', 'credential_request'],
     explanation:
-      'This is a callback scam: the number provided may connect to a fraudster. If you receive a request to call and confirm personal details, call a number you find independently on the official website.',
+      'The sender domain is "mirewarden-estates.net" with an extra "s"; the real estate office uses "mirewarden-estate.net". A phone number that appears only in the message may lead to a fraudster, so look the number up yourself before confirming any details.',
     difficulty: 3,
   },
 
@@ -406,7 +443,7 @@ No action is required at this time.`,
     verdict: 'phishing',
     redFlags: ['spoofed_sender', 'mismatched_link'],
     explanation:
-      'The body is calm and asks for no immediate action — the only signal is the real link destination "ravenmoor-counci1.com" (digit "1" for the letter "l"). Always inspect the destination URL before clicking, even on routine-looking letters.',
+      'Calm tone, genuine-looking sender, no demand at all. The only signal is the real destination "ravenmoor-counci1.com", with the digit "1" in place of the letter "l". A forged From address and a look-alike link can hide in a routine letter.',
     difficulty: 3,
   },
 ]
@@ -702,7 +739,7 @@ There is no urgency — this is a courtesy notice.`,
 ]
 
 // =====================================================================
-// Combined pool — 18 phishing + 14 legit = 32 letters total
+// Combined pool — 20 phishing + 14 legit = 34 letters total
 // =====================================================================
 
 const letters: Letter[] = [...phishingLetters, ...legitLetters]
